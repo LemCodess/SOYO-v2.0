@@ -22,7 +22,16 @@
   }
   
   .login-form .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .login-form .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d3748;
   }
   
   .login-form .form-group input {
@@ -39,18 +48,30 @@
   
   .login-form button[type="submit"] {
     display: block;
-    background-color: #007bff;
+    background-color: #667eea;
     color: #fff;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px 20px;
+    border-radius: 8px;
     cursor: pointer;
     width: 100%;
     text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    margin-top: 8px;
   }
-  
-  .login-form button[type="submit"]:hover {
-    background-color: #0056b3;
+
+  .login-form button[type="submit"]:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .login-form button[type="submit"]:hover:not(:disabled) {
+    background-color: #5a67d8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
   }
 
   .success-message {

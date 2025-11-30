@@ -78,7 +78,7 @@ const App = () => {
             {isLoggedIn ? (
               <Redirect to="/" />
             ) : (
-              <SignUpForm />
+              <SignUpForm setIsLoggedIn={setIsLoggedIn} setName={setName} />
             )}
           </Route>
 
