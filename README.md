@@ -1,4 +1,4 @@
-# 🎨 SOYO v2.0 - Story Of Your Own
+# SOYO v2.0 - Story Of Your Own
 
 A MERN stack story writing and sharing platform.
 
@@ -88,11 +88,8 @@ VITE_API_URL=http://localhost:5000
 
 ## 📚 Documentation
 
-- **[QUICK_START.md](./QUICK_START.md)** - 5-minute setup guide
-- **[REFACTORING_GUIDE.md](./REFACTORING_GUIDE.md)** - Complete documentation
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System architecture
 - **[CHANGES_SUMMARY.md](./CHANGES_SUMMARY.md)** - What changed in v2.0
-- **[RECOMMENDED_STRUCTURE.md](./RECOMMENDED_STRUCTURE.md)** - Monorepo best practices
 
 ---
 
