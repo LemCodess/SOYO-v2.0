@@ -1,0 +1,76 @@
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import CategoryBadge from '../CategoryBadge/CategoryBadge';
+import './StoryCard.css';
+
+const StoryCard = ({ story }) => {
+  const history = useHistory();
+
+  const handleCardClick = () => {
+    history.push(`/story/${story._id}`);
+  };
+
+  const stripHtml = (html) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || '';
+  };
+
+  const getDescription = () => {
+    const desc = stripHtml(story.description || '');
+    return desc.length > 120 ? desc.substring(0, 120) + '...' : desc;
+  };
+
+  const getTitle = () => {
+    return stripHtml(story.topicName || 'Untitled Story');
+  };
+
+  // Generate category-based placeholder cover
+  const getCoverGradient = (category) => {
+    const gradients = {
+      'Action': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      'Adventure': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      'Fanfiction': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      'Fantasy': 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+      'Horror': 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+      'Humor': 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+      'Mystery': 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+      'Poetry': 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+      'Romance': 'linear-gradient(135deg, #ffecd2 30%, #fcb69f 100%)',
+      'Science fiction': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    };
+    return gradients[category] || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+  };
+
+  return (
+    <div className="story-card" onClick={handleCardClick}>
+      <div
+        className="story-card-cover"
+        style={{ background: getCoverGradient(story.category) }}
+      >
+        <div className="story-card-category-overlay">
+          <CategoryBadge category={story.category} />
+        </div>
+      </div>
+
+      <div className="story-card-content">
+        <h3 className="story-card-title">{getTitle()}</h3>
+        <p className="story-card-author">
+          <span className="author-label">by</span> {story.userId?.name || 'Anonymous'}
+        </p>
+        <p className="story-card-description">{getDescription()}</p>
+
+        <div className="story-card-footer">
+          <span className="story-card-language">{story.language || 'English'}</span>
+          <button className="story-card-read-btn" onClick={(e) => {
+            e.stopPropagation();
+            handleCardClick();
+          }}>
+            Read Story →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default StoryCard;

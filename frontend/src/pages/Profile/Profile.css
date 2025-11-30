@@ -1,0 +1,291 @@
+/* Container for drafts section */
+.drafts-section {
+  margin-top: 20px;
+  width: 80%;
+}
+
+/* Grid container for story cards */
+.stories-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Creates 3 equal-width columns */
+  gap: 20px; /* Space between cards */
+  justify-content: center; /* Centers the grid in the container */
+}
+
+/* Story card styles */
+.story-card {
+  padding: 20px; /* Increased padding */
+  border: 1px solid #ccc;
+  border-radius: 8px; /* Slightly more rounded corners */
+  background-color: #f9f9f9;
+  position: relative;
+  width: 300px; /* Increased width */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added shadow for better visibility */
+}
+
+/* Header inside the story card */
+.story-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Delete button inside the story card */
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: rgb(139, 20, 20);
+  font-size: 22px; /* Increased font size */
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.delete-btn:hover {
+  color: rgb(26, 184, 50); /* Text color on hover */
+}
+
+/* Title in the story card */
+.story-card h3 {
+  margin-top: 0;
+  font-size: 18px; /* Increased font size */
+}
+
+/* Modal styles */
+.confirmation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px; /* Increased padding for larger height */
+  border-radius: 8px;
+  text-align: center;
+  width: 80%; /* Optional: Adjust width as needed */
+  max-width: 500px; /* Optional: Limit maximum width */
+}
+
+.modal-content h3 {
+  margin-bottom: 20px;
+}
+
+.modal-content button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white; /* Text color for the buttons */
+}
+
+.modal-content .confirm-button {
+  background: #28a745; /* Green for Yes */
+}
+
+.modal-content .confirm-button:hover {
+  background: #218838; /* Darker green for hover */
+}
+
+.modal-content .cancel-button {
+  background: #dc3545; /* Red for No */
+}
+
+.modal-content .cancel-button:hover {
+  background: #c82333; /* Darker red for hover */
+}
+
+.delete-draft-icon {
+  background: transparent;
+  border: none;
+  color: grey;
+  font-size: 22px; /* Increased font size */
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.modal-button {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-button.confirm {
+  background-color: #4caf50;
+  color: white;
+}
+
+.modal-button.cancel {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Additional styles */
+.top-right {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+}
+
+.logout-button {
+  background-color: #be4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #f5c6c6;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.top-left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 80px;
+  margin-left: 30px;
+}
+
+.background-picture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 45%;
+  background-size: cover;
+  background-position: center;
+  z-index: -2;
+  background-color: rgb(215, 157, 135);
+}
+
+.profile-picture-container {
+  position: absolute;
+  left: 150px;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.change-picture-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #050000;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.username {
+  margin-top: 170px;
+  text-align: center;
+  margin-left: 100px;
+}
+
+.top-right {
+  position: absolute;
+  top: 80px;
+  right: 0px;
+}
+
+.count-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 95%;
+  margin-top: 30px;
+  text-align: center;
+  gap: 40px;
+  margin-left: 70px;
+}
+
+.count-box {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 150px;
+  background-color: white;
+  margin: 0 7px;
+}
+
+.count-box h2 {
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+
+.count-box p {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.reset-picture-btn {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 70%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
