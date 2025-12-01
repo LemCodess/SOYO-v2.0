@@ -1,63 +1,281 @@
+/* Writing Page - Modern & Clean Design */
 .writing-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  min-height: 100vh;
+  background: transparent;
+  padding: 40px 20px;
+}
+
+.writing-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.writing-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.writing-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 12px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.writing-subtitle {
+  font-size: 16px;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.writing-form {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.form-section {
+  margin-bottom: 32px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 20px;
+  font-family: 'Outfit', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #667eea;
+  color: white;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #a0aec0;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a5568' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.form-hint {
+  font-size: 13px;
+  color: #718096;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 2px solid #e2e8f0;
+}
+
+.submit-btn,
+.cancel-btn {
+  flex: 1;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+.submit-btn {
+  background: #667eea;
+  color: white;
+}
+
+.submit-btn:hover {
+  background: #5a67d8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.cancel-btn {
+  background: #e2e8f0;
+  color: #2d3748;
+}
+
+.cancel-btn:hover {
+  background: #cbd5e0;
+  transform: translateY(-2px);
+}
+
+/* Progress Indicator */
+.progress-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 40px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.progress-circle.active {
+  background: #667eea;
+  color: white;
+}
+
+.progress-circle.inactive {
+  background: #e2e8f0;
+  color: #718096;
+}
+
+.progress-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.progress-label.inactive {
+  color: #a0aec0;
+}
+
+.progress-arrow {
+  color: #cbd5e0;
+  font-size: 20px;
+  margin: 0 12px;
+}
+
+/* Required indicator */
+.form-group label .required {
+  color: #e53e3e;
+  margin-left: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .writing-container {
+    padding: 24px 16px;
   }
-  
+
+  .writing-title {
+    font-size: 28px;
+  }
+
   .writing-form {
-    display: flex;
+    padding: 24px 20px;
+  }
+
+  .button-group {
     flex-direction: column;
   }
-  
-  .form-group {
-    margin-bottom: 15px;
+
+  .progress-indicator {
+    flex-direction: column;
+    gap: 16px;
   }
-  
-  .form-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
+
+  .progress-arrow {
+    transform: rotate(90deg);
+    margin: 0;
   }
-  
+}
+
+@media (max-width: 480px) {
+  .writing-title {
+    font-size: 24px;
+  }
+
+  .writing-form {
+    padding: 20px 16px;
+  }
+
   .form-group input,
   .form-group textarea,
   .form-group select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    font-size: 14px;
+    padding: 10px 12px;
   }
-  
-  textarea {
-    resize: vertical;
-    height: 100px;
-  }
-  
-  .submit-btn {
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .submit-btn:hover {
-    background-color: #45a049;
-  }
-  .cancel-btn {
-    padding: 10px 15px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-left: 10px;
-  }
-  
-  .cancel-btn:hover {
-    background-color: #d32f2f;
-  }
+}

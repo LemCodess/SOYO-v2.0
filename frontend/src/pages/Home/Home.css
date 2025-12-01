@@ -33,15 +33,15 @@
 
 .stories-title {
   font-size: 32px;
-  font-weight: 700;
-  color: #1a202c;
+  font-weight: 800;
+  color: #111827;
   margin-bottom: 8px;
 }
 
 .stories-count {
   font-size: 14px;
-  color: #4a5568;
-  font-weight: 600;
+  color: #1a202c;
+  font-weight: 700;
 }
 
 /* Stories Grid */
@@ -197,21 +197,21 @@
   }
 }
 
-/* Dark Mode Support (if needed later) */
+/* Dark Mode Support - Disabled for consistency */
 @media (prefers-color-scheme: dark) {
   .stories-title {
-    color: #e2e8f0;
+    color: #111827;
   }
 
   .stories-count {
-    color: #a0aec0;
+    color: #1a202c;
   }
 
   .stories-empty h3 {
-    color: #e2e8f0;
+    color: #1a202c;
   }
 
   .stories-empty p {
-    color: #a0aec0;
+    color: #4a5568;
   }
 }

@@ -56,9 +56,6 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
             </>
           ) : (
             <>
-              <button className="navbar-btn navbar-btn-write" onClick={() => history.push('/write')}>
-                Write
-              </button>
               <button className="navbar-btn navbar-btn-profile" onClick={() => history.push('/profile')}>
                 Profile
               </button>
