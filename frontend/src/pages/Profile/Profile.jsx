@@ -83,13 +83,29 @@ const Profile = ({ setIsLoggedIn }) => {
   useEffect(() => {
     const fetchPublishedStories = async () => {
       try {
+        console.log('Fetching published stories for userId:', userId);
         const response = await axios.get('/api/stories/published', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
+
+        console.log('All published stories:', response.data.length);
+        console.log('Sample story:', response.data[0]);
+
         // Filter stories by current user
-        const userStories = response.data.filter(
-          story => story.userId === userId || story.author === name
-        );
+        // story.userId is populated as an object: { _id: '...', name: '...' }
+        const userStories = response.data.filter(story => {
+          // Compare the _id from the populated userId object
+          const storyUserId = story.userId?._id || story.userId;
+          const match = storyUserId?.toString() === userId;
+
+          if (match) {
+            console.log('Found user story:', story.topicName);
+          }
+
+          return match;
+        });
+
+        console.log(`Found ${userStories.length} stories for current user`);
         setPublishedStories(userStories);
         setLoading(false);
       } catch (error) {
@@ -98,10 +114,10 @@ const Profile = ({ setIsLoggedIn }) => {
       }
     };
 
-    if (userId || name) {
+    if (userId) {
       fetchPublishedStories();
     }
-  }, [userId, name]);
+  }, [userId]);
 
   const handleProfilePictureChange = (e) => {
     const file = e.target.files[0];
