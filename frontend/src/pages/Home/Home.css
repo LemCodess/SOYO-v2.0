@@ -1,6 +1,7 @@
 /* Home Page Layout */
 .home-page {
   width: 100%;
+  min-height: 100vh;
   padding: 0;
   background: transparent;
 }
@@ -33,14 +34,14 @@
 .stories-title {
   font-size: 32px;
   font-weight: 700;
-  color: #2d3748;
+  color: #1a202c;
   margin-bottom: 8px;
 }
 
 .stories-count {
   font-size: 14px;
-  color: #718096;
-  font-weight: 500;
+  color: #4a5568;
+  font-weight: 600;
 }
 
 /* Stories Grid */
@@ -69,7 +70,8 @@
   align-items: center;
   justify-content: center;
   padding: 80px 20px;
-  color: #718096;
+  color: #4a5568;
+  font-weight: 500;
 }
 
 .loading-spinner {
@@ -107,14 +109,15 @@
 .stories-empty h3 {
   font-size: 24px;
   font-weight: 700;
-  color: #2d3748;
+  color: #1a202c;
   margin-bottom: 8px;
 }
 
 .stories-empty p {
   font-size: 16px;
-  color: #718096;
+  color: #4a5568;
   margin-bottom: 24px;
+  font-weight: 500;
 }
 
 .empty-cta {

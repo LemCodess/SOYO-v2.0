@@ -7,44 +7,63 @@ import ReactQuill from 'react-quill';
 
 const Profile = ({ setIsLoggedIn }) => {
   const [imageFile, setImageFile] = useState(null);
-  const [imageFileUrl, setImageFileUrl] = useState(localStorage.getItem('profileImageUrl') || assets.defaultpfp2);
-  const [name, setName] = useState(localStorage.getItem('userName') || '');
+  const [imageFileUrl, setImageFileUrl] = useState(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [memberSince, setMemberSince] = useState('');
   const [drafts, setDrafts] = useState([]);
-  const [draftCount, setDraftCount] = useState(0);
+  const [publishedStories, setPublishedStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [draftToDelete, setDraftToDelete] = useState(null);
-  const [showProfilePictureDeleteModal, setShowProfilePictureDeleteModal] = useState(false); 
+  const [showProfilePictureDeleteModal, setShowProfilePictureDeleteModal] = useState(false);
 
   const history = useHistory();
   const userId = localStorage.getItem('userId');
 
+  // Fetch user profile data
   useEffect(() => {
-    if (!localStorage.getItem('profileImageUrl') || !localStorage.getItem('userName')) {
-      const fetchUserData = async () => {
-        try {
-          const response = await axios.get('/api/user/profile', {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-          });
-          const profilePictureUrl = response.data.profilePicture || assets.defaultpfp2;
-          const fetchedName = response.data.name || '';
+    const fetchUserData = async () => {
+      try {
+        console.log('Fetching user profile...');
+        const response = await axios.get('/api/user/profile', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
 
-          if (profilePictureUrl !== assets.defaultpfp2) {
-            setImageFileUrl(profilePictureUrl);
-            localStorage.setItem('profileImageUrl', profilePictureUrl);
-          }
+        console.log('Profile response:', response.data);
+        const userData = response.data.user;
+        setName(userData.name || '');
+        setEmail(userData.email || '');
+        setImageFileUrl(userData.profilePicture || assets.defaultpfp);
 
-          if (fetchedName) {
-            setName(fetchedName);
-            localStorage.setItem('userName', fetchedName);
-          }
-        } catch (error) {
-          console.error('Error fetching user profile:', error);
+        console.log('Profile picture URL:', userData.profilePicture);
+        console.log('Image field:', userData.image);
+
+        // Format member since date
+        if (userData.createdAt) {
+          const date = new Date(userData.createdAt);
+          setMemberSince(date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long'
+          }));
         }
-      };
-      fetchUserData();
-    }
+
+        // Update localStorage
+        localStorage.setItem('userName', userData.name || '');
+        if (userData.profilePicture) {
+          localStorage.setItem('profileImageUrl', userData.profilePicture);
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+        console.error('Error response:', error.response?.data);
+      }
+    };
+
+    fetchUserData();
   }, []);
 
+  // Fetch drafts
   useEffect(() => {
     const fetchDrafts = async () => {
       try {
@@ -52,13 +71,37 @@ const Profile = ({ setIsLoggedIn }) => {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         setDrafts(response.data);
-        setDraftCount(response.data.length);
       } catch (error) {
         console.error('Error fetching drafts:', error);
       }
     };
+
     fetchDrafts();
   }, []);
+
+  // Fetch published stories
+  useEffect(() => {
+    const fetchPublishedStories = async () => {
+      try {
+        const response = await axios.get('/api/stories/published', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        // Filter stories by current user
+        const userStories = response.data.filter(
+          story => story.userId === userId || story.author === name
+        );
+        setPublishedStories(userStories);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching published stories:', error);
+        setLoading(false);
+      }
+    };
+
+    if (userId || name) {
+      fetchPublishedStories();
+    }
+  }, [userId, name]);
 
   const handleProfilePictureChange = (e) => {
     const file = e.target.files[0];
@@ -66,6 +109,60 @@ const Profile = ({ setIsLoggedIn }) => {
       setImageFile(file);
       const previewUrl = URL.createObjectURL(file);
       setImageFileUrl(previewUrl);
+      // Auto-upload on selection
+      uploadImage(file);
+    }
+  };
+
+  const uploadImage = async (file) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('userId', userId);
+
+    try {
+      const response = await axios.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      console.log('Upload response:', response.data);
+
+      if (response.data.success && response.data.user) {
+        const uploadedImageUrl = response.data.user.profilePicture;
+
+        // Update local state
+        setImageFileUrl(uploadedImageUrl);
+
+        // Update localStorage
+        localStorage.setItem('profileImageUrl', uploadedImageUrl);
+
+        console.log('Profile picture uploaded and saved successfully!');
+        console.log('Image URL:', uploadedImageUrl);
+
+        // Verify the upload by refetching profile data
+        setTimeout(async () => {
+          try {
+            const verifyResponse = await axios.get('/api/user/profile', {
+              headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            });
+            console.log('Profile verification after upload:', verifyResponse.data);
+          } catch (err) {
+            console.error('Error verifying profile:', err);
+          }
+        }, 500);
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      console.error('Error details:', error.response?.data);
+      const errorMsg = error.response?.data?.error || error.message || 'Unknown error';
+      alert(`Failed to upload profile picture: ${errorMsg}`);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -85,7 +182,7 @@ const Profile = ({ setIsLoggedIn }) => {
       });
 
       if (response.ok) {
-        const defaultPicture = assets.defaultpfp2;
+        const defaultPicture = assets.defaultpfp;
         setImageFileUrl(defaultPicture);
         localStorage.setItem('profileImageUrl', defaultPicture);
       } else {
@@ -96,40 +193,6 @@ const Profile = ({ setIsLoggedIn }) => {
     }
 
     setShowProfilePictureDeleteModal(false);
-  };
-
-  useEffect(() => {
-    if (imageFile) {
-      uploadImage();
-    }
-  }, [imageFile]);
-
-  const uploadImage = async () => {
-    const formData = new FormData();
-    formData.append('file', imageFile);
-    formData.append('userId', userId);
-
-    try {
-      const response = await axios.post('http://localhost:5000/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      if (response.data.success) {
-        const uploadedImageUrl = `http://localhost:5000/public/Images/${response.data.result.image}`;
-        setImageFileUrl(uploadedImageUrl);
-        localStorage.setItem('profileImageUrl', uploadedImageUrl);
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('profileImageUrl');
-    localStorage.removeItem('userName');
-    setIsLoggedIn(false);
-    history.push('/');
   };
 
   const handleDeleteDraftClick = (id) => {
@@ -143,7 +206,6 @@ const Profile = ({ setIsLoggedIn }) => {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setDrafts(drafts.filter(draft => draft._id !== draftToDelete));
-      setDraftCount(draftCount - 1);
       setShowDeleteModal(false);
     } catch (error) {
       console.error('Error deleting draft:', error);
@@ -154,107 +216,222 @@ const Profile = ({ setIsLoggedIn }) => {
     setDraftToDelete(null);
     setShowDeleteModal(false);
   };
+
   const handleEditDraft = (draft) => {
     history.push({
       pathname: '/chapters',
       state: { storyData: draft }
     });
   };
+
+  const handleViewStory = (storyId) => {
+    history.push(`/story/${storyId}`);
+  };
+
   return (
-    <div className="profile-container">
-      <div className="background-picture">
-        <img src={assets.backgroundImage} alt="Background" className="background-image" />
-      </div>
-      <div className="profile-content">
-        <div className="profile-picture-container">
-          <img src={imageFileUrl} alt="Profile" className="profile-picture" />
-          <label htmlFor="profile-picture-input" className="change-picture-btn">
-            Change Picture
-          </label>
-          <input
-            id="profile-picture-input"
-            type="file"
-            accept="image/*"
-            style={{ display: 'none' }}
-            onChange={handleProfilePictureChange}
-          />
-          {imageFileUrl !== assets.defaultpfp2 && (
-            <button className="reset-picture-btn" onClick={handleProfilePictureDeleteClick}>
-              X
-            </button>
-          )}
-        </div>
-        <div className="username">
-          <h2>✧✧ {name ? name : ''} ✧✧</h2>
-        </div>
-        <div className="count-container">
-          <div className="count-box">
-            <h2>Follower Count</h2>
-            <p>0</p>
-          </div>
-          <div className="count-box">
-            <h2>Following Count</h2>
-            <p>0</p>
-          </div>
-          <div className="count-box">
-            <h2>Story Count</h2>
-            <p>0</p>
-          </div>
-        </div>
-        <div className="top-right">
-          <button onClick={handleLogout} className="logout-button">Logout</button>
-        </div>
-        <div className="drafts-section">
-          <h2>Your Drafts ({draftCount})</h2>
-          <div className="stories-container">
-            {drafts.length === 0 ? (
-              <p>No drafts found</p>
-            ) : (
-              drafts.map((draft) => (
-                <div key={draft._id} className="story-card">
-                  <div className="story-card-header">
-                  <ReactQuill 
-                  value={draft.topicName}
-                  readOnly={true}
-                  theme="bubble"
-                />
-                    <button onClick={() => handleDeleteDraftClick(draft._id)} className="delete-draft-icon">✕</button>
-                    <button className="edit-btn" onClick={() => handleEditDraft(draft)}>Edit</button>
-                  </div>
-                  <ReactQuill 
-                  value={draft.description}
-                  readOnly={true}
-                  theme="bubble"
-                />
+    <div className="profile-page">
+      <div className="profile-header">
+        <div className="profile-header-content">
+          <div className="profile-picture-section">
+            <div className="profile-picture-wrapper">
+              <img
+                src={imageFileUrl || assets.defaultpfp}
+                alt="Profile"
+                className="profile-picture"
+              />
+              {uploading && (
+                <div className="upload-overlay">
+                  <div className="upload-spinner"></div>
                 </div>
-              ))
+              )}
+              {imageFileUrl !== assets.defaultpfp && !uploading && (
+                <button
+                  className="delete-picture-btn"
+                  onClick={handleProfilePictureDeleteClick}
+                  title="Remove profile picture"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+            <label htmlFor="profile-picture-input" className="change-picture-btn">
+              <span className="btn-icon">📷</span>
+              Change Picture
+            </label>
+            <input
+              id="profile-picture-input"
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleProfilePictureChange}
+            />
+          </div>
+
+          <div className="profile-info">
+            <h1 className="profile-name">{name}</h1>
+            <p className="profile-email">{email}</p>
+            {memberSince && (
+              <p className="profile-member-since">Member since {memberSince}</p>
             )}
           </div>
         </div>
-        {showDeleteModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <h3>Are you sure you want to delete this draft?</h3>
-              <div className="modal-buttons">
-                <button className="modal-button confirm" onClick={confirmDeleteDraft}>Yes</button>
-                <button className="modal-button cancel" onClick={cancelDeleteDraft}>No</button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {showProfilePictureDeleteModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <h3>Are you sure you want to delete your profile picture?</h3>
-              <div className="modal-buttons">
-                <button className="modal-button confirm" onClick={confirmResetProfilePicture}>Yes</button>
-                <button className="modal-button cancel" onClick={() => setShowProfilePictureDeleteModal(false)}>No</button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
+
+      <div className="profile-content">
+        <div className="profile-stats">
+          <div className="stat-card">
+            <div className="stat-number">{publishedStories.length}</div>
+            <div className="stat-label">Published Stories</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-number">{drafts.length}</div>
+            <div className="stat-label">Drafts</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-number">0</div>
+            <div className="stat-label">Followers</div>
+          </div>
+        </div>
+
+        <div className="profile-sections">
+          {/* Published Stories Section */}
+          <section className="profile-section">
+            <div className="section-header">
+              <h2 className="section-title">Published Stories</h2>
+              <span className="section-count">{publishedStories.length} {publishedStories.length === 1 ? 'story' : 'stories'}</span>
+            </div>
+            {loading ? (
+              <div className="section-loading">
+                <div className="loading-spinner"></div>
+                <p>Loading stories...</p>
+              </div>
+            ) : publishedStories.length === 0 ? (
+              <div className="section-empty">
+                <div className="empty-icon">📚</div>
+                <p>No published stories yet</p>
+                <button className="write-story-btn" onClick={() => history.push('/write')}>
+                  Write Your First Story
+                </button>
+              </div>
+            ) : (
+              <div className="stories-grid">
+                {publishedStories.map((story) => (
+                  <div
+                    key={story._id}
+                    className="story-card-profile"
+                    onClick={() => handleViewStory(story._id)}
+                  >
+                    <div className="story-card-content">
+                      <ReactQuill
+                        value={story.topicName}
+                        readOnly={true}
+                        theme="bubble"
+                        className="story-title-quill"
+                      />
+                      <ReactQuill
+                        value={story.description}
+                        readOnly={true}
+                        theme="bubble"
+                        className="story-desc-quill"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* Drafts Section */}
+          <section className="profile-section">
+            <div className="section-header">
+              <h2 className="section-title">Drafts</h2>
+              <span className="section-count">{drafts.length} {drafts.length === 1 ? 'draft' : 'drafts'}</span>
+            </div>
+            {drafts.length === 0 ? (
+              <div className="section-empty">
+                <div className="empty-icon">✍️</div>
+                <p>No drafts found</p>
+              </div>
+            ) : (
+              <div className="stories-grid">
+                {drafts.map((draft) => (
+                  <div key={draft._id} className="story-card-profile draft-card">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteDraftClick(draft._id);
+                      }}
+                      className="delete-draft-btn"
+                      title="Delete draft"
+                    >
+                      ×
+                    </button>
+                    <div className="story-card-content">
+                      <ReactQuill
+                        value={draft.topicName}
+                        readOnly={true}
+                        theme="bubble"
+                        className="story-title-quill"
+                      />
+                      <ReactQuill
+                        value={draft.description}
+                        readOnly={true}
+                        theme="bubble"
+                        className="story-desc-quill"
+                      />
+                    </div>
+                    <button
+                      className="edit-draft-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditDraft(draft);
+                      }}
+                    >
+                      Edit Draft
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
+
+      {/* Delete Draft Modal */}
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Delete Draft?</h3>
+            <p>Are you sure you want to delete this draft? This action cannot be undone.</p>
+            <div className="modal-buttons">
+              <button className="modal-btn modal-btn-confirm" onClick={confirmDeleteDraft}>
+                Delete
+              </button>
+              <button className="modal-btn modal-btn-cancel" onClick={cancelDeleteDraft}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Profile Picture Modal */}
+      {showProfilePictureDeleteModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Remove Profile Picture?</h3>
+            <p>Your profile picture will be reset to the default image.</p>
+            <div className="modal-buttons">
+              <button className="modal-btn modal-btn-confirm" onClick={confirmResetProfilePicture}>
+                Remove
+              </button>
+              <button className="modal-btn modal-btn-cancel" onClick={() => setShowProfilePictureDeleteModal(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -52,22 +52,37 @@ const signupUser = async (req, res) => {
 // Get user profile
 const getUserProfile = async (req, res) => {
     try {
+        console.log('=== GET PROFILE CALLED ===');
+        console.log('User ID:', req.user._id);
+
         const user = await User.findById(req.user._id).select('-password');
-        
+
         if (!user) {
+            console.log('ERROR: User not found');
             return res.status(404).json({ error: 'User not found' });
         }
 
+        console.log('User found:', { id: user._id, name: user.name, image: user.image });
+
+        // Build profile picture URL if user has an image
+        const profilePictureUrl = user.image
+            ? `/public/Images/${user.image}`
+            : null;
+
+        console.log('Profile picture URL:', profilePictureUrl);
+
         res.status(200).json({
             user: {
-                username: user.username,
+                _id: user._id,
+                name: user.name,
                 email: user.email,
-                profilePicture: user.profilePicture 
-
+                profilePicture: profilePictureUrl,
+                image: user.image,
+                createdAt: user.createdAt
             }
         });
     } catch (error) {
-        console.error('Error fetching user profile:', error.message);
+        console.error('❌ Error fetching user profile:', error.message);
         res.status(500).json({ error: 'Error fetching user profile' });
     }
 };

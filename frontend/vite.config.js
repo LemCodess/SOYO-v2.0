@@ -20,6 +20,16 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      '/upload': {
+        target: 'http://localhost:5000', // backend server URL
+        changeOrigin: true,
+        secure: false,
+      },
+      '/public': {
+        target: 'http://localhost:5000', // backend server URL
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });
