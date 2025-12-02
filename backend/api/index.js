@@ -150,6 +150,51 @@ app.delete('/api/user/delete-profile-picture', async (req, res) => {
   }
 });
 
+// MongoDB connection (for serverless, connection is cached)
+async function connectToDatabase() {
+  // Check if already connected
+  if (mongoose.connection.readyState === 1) {
+    console.log('✅ Using existing MongoDB connection');
+    return mongoose.connection;
+  }
+
+  // Check if connecting
+  if (mongoose.connection.readyState === 2) {
+    console.log('⏳ MongoDB connection in progress, waiting...');
+    await new Promise((resolve) => {
+      mongoose.connection.once('connected', resolve);
+    });
+    return mongoose.connection;
+  }
+
+  try {
+    console.log('🔌 Connecting to MongoDB...');
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    console.log('✅ Connected to MongoDB');
+    return mongoose.connection;
+  } catch (error) {
+    console.error('❌ Database connection error:', error);
+    throw error;
+  }
+}
+
+// Middleware to ensure DB connection before handling requests
+app.use(async (req, res, next) => {
+  try {
+    await connectToDatabase();
+    next();
+  } catch (error) {
+    console.error('Failed to connect to database:', error);
+    res.status(503).json({
+      success: false,
+      error: 'Database connection failed. Please try again later.'
+    });
+  }
+});
+
 // Request logging middleware
 app.use((req, res, next) => {
   console.log(req.path, req.method);
@@ -165,37 +210,13 @@ app.get("/", (req, res) => {
 app.use('/api/stories', storiesRoutes);
 app.use('/api/user', userRoutes);
 
-// MongoDB connection (for serverless, connection is cached)
-let cachedDb = null;
-
-async function connectToDatabase() {
-  if (cachedDb) {
-    console.log('Using cached database connection');
-    return cachedDb;
-  }
-
-  try {
-    const db = await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    cachedDb = db;
-    console.log('✅ Connected to MongoDB');
-    return db;
-  } catch (error) {
-    console.error('❌ Database connection error:', error);
-    throw error;
-  }
-}
-
-// Initialize database connection
-connectToDatabase();
-
 // For local development
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  connectToDatabase().then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    });
   });
 }
 
