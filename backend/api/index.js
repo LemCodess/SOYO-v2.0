@@ -188,18 +188,16 @@ async function connectToDatabase() {
   }
 }
 
+// Initialize database connection
+connectToDatabase();
+
 // For local development
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
-  connectToDatabase().then(() => {
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-    });
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
   });
 }
 
-// Export serverless handler for Vercel
-module.exports = async (req, res) => {
-  await connectToDatabase();
-  return app(req, res);
-};
+// Export for Vercel serverless
+module.exports = app;
