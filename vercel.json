@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "soyo-app",
   "builds": [
     {
       "src": "backend/api/index.js",
@@ -16,19 +15,12 @@
   ],
   "routes": [
     {
-      "src": "/upload",
-      "dest": "backend/api/index.js"
-    },
-    {
-      "src": "/api/(.*)",
+      "src": "/(api|upload)/(.*)",
       "dest": "backend/api/index.js"
     },
     {
       "src": "/(.*)",
       "dest": "frontend/dist/$1"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
