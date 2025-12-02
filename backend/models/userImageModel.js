@@ -6,12 +6,18 @@ const Schema = mongoose.Schema;
 const userImageSchema = new Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', 
+    ref: 'User',
     required: true
   },
   image: {
     type: String,
     required: true
+  },
+  cloudinaryUrl: {
+    type: String
+  },
+  cloudinaryId: {
+    type: String
   }
 });
 

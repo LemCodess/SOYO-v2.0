@@ -64,8 +64,10 @@ const getUserProfile = async (req, res) => {
 
         console.log('User found:', { id: user._id, name: user.name, image: user.image });
 
-        // Build profile picture URL if user has an image
-        const profilePictureUrl = user.image
+        // Build profile picture URL - Use Cloudinary URL if available, otherwise fall back to local
+        const profilePictureUrl = user.cloudinaryUrl
+            ? user.cloudinaryUrl
+            : user.image
             ? `/public/Images/${user.image}`
             : null;
 
@@ -78,6 +80,7 @@ const getUserProfile = async (req, res) => {
                 email: user.email,
                 profilePicture: profilePictureUrl,
                 image: user.image,
+                cloudinaryUrl: user.cloudinaryUrl,
                 createdAt: user.createdAt
             }
         });

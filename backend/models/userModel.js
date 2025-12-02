@@ -20,6 +20,9 @@ const userSchema = new Schema({
     },
     image: {
         type: String
+    },
+    cloudinaryUrl: {
+        type: String
     }
 });
 
