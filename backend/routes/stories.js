@@ -44,13 +44,13 @@ router.post('/', requireAuth, async (req, res) => {
 // GET published stories for homepage with search functionality - PUBLIC
 router.get('/published', async (req, res) => {
   const { searchQuery } = req.query;
-  const searchRegex = new RegExp(searchQuery, 'i');
 
   try {
     let query = { status: 'published' };
 
     // If a search query is provided, add it to the query
     if (searchQuery) {
+      const searchRegex = new RegExp(searchQuery, 'i');
       query = {
         status: 'published',
         $or: [
@@ -62,7 +62,14 @@ router.get('/published', async (req, res) => {
     }
 
     const stories = await Story.find(query).populate('userId', 'name'); // Populates author name
-    const filteredStories = stories.filter(story => story.userId.name.match(searchRegex));
+
+    // Filter by author name if search query exists
+    const filteredStories = searchQuery
+      ? stories.filter(story => {
+          const searchRegex = new RegExp(searchQuery, 'i');
+          return story.userId && story.userId.name && story.userId.name.match(searchRegex);
+        })
+      : stories;
 
     res.status(200).json(filteredStories);
   } catch (error) {
