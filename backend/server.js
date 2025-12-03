@@ -221,6 +221,16 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to the app" });
 });
 
+// Health check endpoint for monitoring and Docker
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    mongodb: mongoose.connection.readyState === 1 ? "connected" : "disconnected"
+  });
+});
+
 app.use('/api/stories', storiesRoutes);
 app.use('/api/user', userRoutes);
 
