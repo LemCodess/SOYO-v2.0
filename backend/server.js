@@ -25,9 +25,8 @@ const corsOptions = {
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:5173', // Vite dev server
-      'https://soyo-frontend.onrender.com', // Update with your actual frontend URL
-      // Add your actual Render frontend URL here when deployed
-    ];
+      process.env.FRONTEND_URL, // Frontend URL from environment variable
+    ].filter(Boolean); // Remove undefined values
 
     if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
       callback(null, true);
