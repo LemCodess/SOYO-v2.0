@@ -15,7 +15,30 @@ console.log('MONGO_URI:', process.env.MONGO_URI);
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+
+// CORS configuration
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:5173', // Vite dev server
+      'https://soyo-frontend.onrender.com', // Update with your actual frontend URL
+      // Add your actual Render frontend URL here when deployed
+    ];
+
+    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
