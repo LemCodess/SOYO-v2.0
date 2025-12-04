@@ -2,6 +2,11 @@
 
 > A modern MERN stack platform for creative writers to share and discover stories.
 
+## 🌐 Live Demo
+
+**🚀 [https://soyo-app.vercel.app](https://soyo-app.vercel.app)**
+
+---
 
 ## ✨ Features
 
@@ -122,122 +127,67 @@ npm run dev
 
 ---
 
-## 📜 Available Scripts
-
-### Root Directory
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Run both backend and frontend concurrently |
-| `npm run dev:backend` | Run backend only |
-| `npm run dev:frontend` | Run frontend only |
-| `npm run install:all` | Install dependencies for all packages |
-| `npm run build` | Build frontend for production |
-| `npm run clean` | Remove all node_modules and build files |
-
-### Backend (`/backend`)
-
-| Command | Description |
-|---------|-------------|
-| `npm start` | Start production server |
-| `npm run dev` | Start development server with nodemon |
-| `npm run seed` | Populate database with sample data |
-
-### Frontend (`/frontend`)
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start Vite development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-
----
 
 ## 🗂️ Project Structure
 
 ```
 CSE471-Project-sorting_complete_18th_sept/
+├── api/                       # Vercel serverless functions
+│   └── index.js              # Backend entry point for Vercel
+│
 ├── backend/
-│   ├── controllers/        # Route handlers
-│   ├── middleware/         # Auth & validation middleware
-│   ├── models/            # MongoDB schemas
-│   ├── routes/            # API routes
-│   ├── public/            # Static files (uploaded images)
-│   ├── server.js          # Express server entry point
-│   ├── seedDatabase.js    # Database seeding script
-│   ├── nodemon.json       # Nodemon configuration
+│   ├── controllers/          # Route handlers
+│   ├── middleware/           # Auth & validation middleware
+│   ├── models/              # MongoDB schemas
+│   ├── routes/              # API routes
+│   ├── utils/               # Utility functions
+│   │   └── db.js           # Database connection (serverless-optimized)
+│   ├── public/              # Static files (local storage only)
+│   ├── server.js            # Express server entry point
+│   ├── seedDatabase.js      # Database seeding script
+│   ├── nodemon.json         # Nodemon configuration
 │   └── package.json
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── pages/         # Page components
-│   │   ├── context/       # React context (auth)
-│   │   ├── config/        # Configuration files
-│   │   ├── api/           # API utilities
-│   │   └── App.jsx        # Main app component
-│   ├── public/            # Static assets
+│   │   ├── components/      # React components
+│   │   ├── pages/           # Page components
+│   │   ├── context/         # React context (auth)
+│   │   ├── config/          # Configuration files
+│   │   │   └── api.config.js # API base URL configuration
+│   │   ├── api/             # API utilities
+│   │   ├── hooks/           # Custom React hooks
+│   │   ├── router/          # Route configuration
+│   │   ├── styles/          # CSS styles
+│   │   ├── utils/           # Helper functions
+│   │   ├── App.jsx          # Main app component
+│   │   └── main.jsx         # React entry point
+│   ├── public/              # Static assets
+│   ├── vite.config.js       # Vite configuration
 │   └── package.json
 │
-└── package.json           # Root package (scripts)
+├── scripts/                  # Utility scripts
+├── vercel.json              # Vercel deployment configuration
+├── .vercelignore            # Files to exclude from Vercel deployment
+├── .env.example             # Environment variables template
+├── VERCEL_DEPLOYMENT.md     # Detailed deployment guide
+├── README.md                # This file
+└── package.json             # Root package (monorepo scripts)
 ```
+
+### Key Files Explained
+
+| File | Purpose |
+|------|---------|
+| `vercel.json` | Vercel configuration for routing and builds |
+| `api/index.js` | Serverless function wrapper for Express app |
+| `backend/server.js` | Express app (exports for serverless, runs locally in dev) |
+| `backend/utils/db.js` | MongoDB connection with pooling for serverless |
+| `frontend/vite.config.js` | Vite build configuration and dev server proxy |
+| `.vercelignore` | Excludes unnecessary files from deployment |
 
 ---
 
-## 🔧 Configuration Details
-
-### Image Storage Options
-
-SOYO supports two image storage methods:
-
-#### 1. Local Storage (Default)
-Images stored in `backend/public/Images/`
-
-```env
-USE_CLOUDINARY=false
-```
-
-**Pros:** Simple, no external dependencies
-**Cons:** Not suitable for cloud deployments
-
-#### 2. Cloudinary (Recommended for Production)
-Images stored on Cloudinary CDN
-
-```env
-USE_CLOUDINARY=true
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-```
-
-**Pros:**
-- Works on any hosting platform
-- CDN for fast global delivery
-- Automatic image optimization
-- Free tier available
-
-**Cons:** Requires external account
-
-**Get Cloudinary Credentials:** https://cloudinary.com/users/register/free
-
----
-
-## 🎨 Story Categories
-
-| Category | Description |
-|----------|-------------|
-| 📚 **Action** | High-intensity, adrenaline-pumping stories |
-| 🗺️ **Adventure** | Journeys, quests, and explorations |
-| ✍️ **Fanfiction** | Stories based on existing works |
-| 🐉 **Fantasy** | Magical worlds and mythical creatures |
-| 👻 **Horror** | Scary and suspenseful tales |
-| 😄 **Humor** | Comedic and lighthearted stories |
-| 🔍 **Mystery** | Detective stories and puzzles |
-| 📖 **Poetry** | Verse and poetic narratives |
-| 💕 **Romance** | Love stories and relationships |
-| 🚀 **Science Fiction** | Futuristic and technological tales |
-
----
 
 ## 🌐 API Endpoints
 
@@ -276,24 +226,6 @@ The seed script creates realistic test data:
 4. alex.rivera@example.com - Alex Rivera
 5. emma.thompson@example.com - Emma Thompson
 
-### Sample Stories
-- **The Last Dragon Keeper** (Fantasy)
-- **Echoes in the Code** (Science Fiction)
-- **The Midnight Library** (Mystery)
-- **Cosmic Café** (Humor)
-- **When Stars Collide** (Romance)
-- **The Haunting of Blackwood Manor** (Horror)
-- **অন্ধকারের আলো** (Poetry - Bangla)
-- **Sword of the Shinobi** (Fanfiction)
-- And 7 more diverse stories!
-
-Each story includes:
-- 2 complete chapters with real content
-- HTML-formatted text
-- Proper author attribution
-- Realistic tags and descriptions
-
----
 
 ## 🔒 Security Features
 
@@ -304,36 +236,6 @@ Each story includes:
 - ✅ **Input Validation** - Server-side validation
 - ✅ **SQL Injection Prevention** - Mongoose parameterized queries
 
----
-
-## 🐛 Troubleshooting
-
-### Port 5000 Already in Use
-```bash
-# Windows
-netstat -ano | findstr :5000
-taskkill //F //PID <PID_NUMBER>
-
-# Mac/Linux
-lsof -ti:5000 | xargs kill -9
-```
-
-### MongoDB Connection Issues
-- Verify `MONGO_URI` in `backend/.env`
-- Check MongoDB Atlas whitelist (allow your IP)
-- Ensure database user has proper permissions
-
-### Frontend Can't Connect to Backend
-- Check `VITE_API_URL` in `frontend/.env`
-- Verify backend is running on port 5000
-- Check browser console for CORS errors
-
-### Stories Not Appearing on Homepage
-- Run `npm run seed` to populate database
-- Verify MongoDB connection is successful
-- Check that stories have `status: 'published'`
-
----
 
 ## 📝 Development Notes
 
@@ -353,32 +255,6 @@ lsof -ti:5000 | xargs kill -9
 - Responsive design with media queries
 - CSS variables for theming
 
----
 
-## 🚢 Deployment
-
-### Backend Deployment (Any Platform)
-
-1. **Set Environment Variables** on your platform
-2. **With Cloudinary** (Recommended):
-   ```env
-   USE_CLOUDINARY=true
-   CLOUDINARY_CLOUD_NAME=...
-   CLOUDINARY_API_KEY=...
-   CLOUDINARY_API_SECRET=...
-   ```
-3. **Build command**: `npm install`
-4. **Start command**: `npm start`
-
-### Frontend Deployment
-
-1. **Build**: `npm run build`
-2. **Deploy** `frontend/dist` folder to:
-   - Vercel
-   - Netlify
-   - GitHub Pages
-   - Any static hosting
-
-3. **Update** `VITE_API_URL` to your backend URL
 
 
