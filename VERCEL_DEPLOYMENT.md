@@ -22,35 +22,7 @@ All necessary files have been created and configured:
 
 You need to set these in the Vercel Dashboard:
 
-### Backend Environment Variables
 
-```bash
-# Node Environment
-NODE_ENV=production
-
-# MongoDB Connection
-MONGO_URI=your_mongodb_atlas_connection_string
-
-# JWT Secret
-SECRET=your_jwt_secret_key
-
-# Cloudinary Configuration (REQUIRED - local storage won't work on Vercel)
-USE_CLOUDINARY=true
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-
-# Frontend URL (will be your Vercel domain)
-FRONTEND_URL=https://your-project.vercel.app
-```
-
-### Frontend Environment Variables
-
-```bash
-# Optional: Only if you want to use a custom API URL
-# Leave empty to use relative URLs (recommended)
-VITE_API_URL=
-```
 
 ---
 
