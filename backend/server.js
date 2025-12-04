@@ -9,6 +9,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const UserImage = require('./models/userImageModel');
+const connectDB = require('./utils/db');
 
 const app = express();
 console.log('MONGO_URI:', process.env.MONGO_URI);
@@ -28,7 +29,10 @@ const corsOptions = {
       process.env.FRONTEND_URL, // Frontend URL from environment variable
     ].filter(Boolean); // Remove undefined values
 
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+    // In production, also allow Vercel preview deployments
+    if (allowedOrigins.indexOf(origin) !== -1 ||
+        process.env.NODE_ENV === 'development' ||
+        (origin && origin.includes('.vercel.app'))) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -42,7 +46,8 @@ app.use(cors(corsOptions));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Cloudinary configuration
-const USE_CLOUDINARY = process.env.USE_CLOUDINARY === 'true';
+// Force Cloudinary in production (Vercel doesn't support local file storage)
+const USE_CLOUDINARY = process.env.NODE_ENV === 'production' || process.env.USE_CLOUDINARY === 'true';
 let cloudinary, CloudinaryStorage;
 
 if (USE_CLOUDINARY) {
@@ -239,6 +244,20 @@ app.use((req, res, next) => {
   next();
 });
 
+// Database connection middleware for serverless
+if (process.env.NODE_ENV === 'production') {
+  // For Vercel serverless, connect on demand
+  app.use(async (req, res, next) => {
+    try {
+      await connectDB();
+      next();
+    } catch (error) {
+      console.error('Database connection error:', error);
+      res.status(500).json({ error: 'Database connection failed' });
+    }
+  });
+}
+
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the app" });
 });
@@ -256,14 +275,18 @@ app.get("/api/health", (req, res) => {
 app.use('/api/stories', storiesRoutes);
 app.use('/api/user', userRoutes);
 
-
-
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    app.listen(process.env.PORT, () => {
-      console.log('Connected to DB and listening on port', process.env.PORT);
+// For local development only
+if (process.env.NODE_ENV !== 'production') {
+  mongoose.connect(process.env.MONGO_URI)
+    .then(() => {
+      app.listen(process.env.PORT || 5000, () => {
+        console.log('Connected to DB and listening on port', process.env.PORT || 5000);
+      });
+    })
+    .catch((error) => {
+      console.log('Database connection error:', error);
     });
-  })
-  .catch((error) => {
-    console.log('Database connection error:', error);
-  });
+}
+
+// Export for Vercel serverless
+module.exports = app;

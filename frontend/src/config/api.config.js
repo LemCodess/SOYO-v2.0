@@ -1,5 +1,8 @@
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
+  // In production (Vercel), use relative URLs since frontend and backend are on same domain
+  // In development, use localhost backend
+  BASE_URL: import.meta.env.VITE_API_URL ||
+            (import.meta.env.PROD ? '' : 'http://localhost:5000'),
   TIMEOUT: 30000, // 30 seconds
   RETRY_ATTEMPTS: 3,
   RETRY_DELAY: 1000, // 1 second

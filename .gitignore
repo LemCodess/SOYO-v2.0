@@ -69,3 +69,6 @@ dist/
 
 # Production
 *.tsbuildinfo
+
+.vercel
+.env*.local
