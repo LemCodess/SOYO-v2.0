@@ -64,7 +64,15 @@ const StoryCard = ({ story }) => {
         <p className="story-card-description">{getDescription()}</p>
 
         <div className="story-card-footer">
-          <span className="story-card-language">{story.language || 'English'}</span>
+          <div className="story-card-stats">
+            <span className="story-card-language">{story.language || 'English'}</span>
+            <span className="story-card-likes">
+              ❤️ {story.likes?.length || 0}
+            </span>
+            <span className="story-card-comments">
+              💬 {story.comments?.length || 0}
+            </span>
+          </div>
           <button className="story-card-read-btn" onClick={(e) => {
             e.stopPropagation();
             handleCardClick();

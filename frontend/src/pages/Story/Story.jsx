@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import DOMPurify from 'dompurify';
+import LikeButton from '../../components/LikeButton/LikeButton';
+import CommentBox from '../../components/CommentBox/CommentBox';
 import './Story.css';
 
 const Story = () => {
@@ -10,6 +12,7 @@ const Story = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const currentUserId = localStorage.getItem('userId');
+  const isAuthenticated = !!localStorage.getItem('token');
 
   useEffect(() => {
     const fetchStory = async () => {
@@ -185,6 +188,16 @@ const Story = () => {
               <p className="chapter-text">{story.chapters}</p>
             </div>
           )}
+
+          {/* Like Button Section */}
+          <div className="story-engagement">
+            <LikeButton storyId={story._id} isAuthenticated={isAuthenticated} />
+          </div>
+
+          {/* Comments Section */}
+          <div className="story-comments-section">
+            <CommentBox storyId={story._id} isAuthenticated={isAuthenticated} />
+          </div>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ const requireAuth = require('../middleware/requireAuth');
 const Story = require('../models/storyModel');
 const upload = require('../middleware/uploadMemory');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
+const { likeStory, addComment, getComments, getLikes } = require('../controllers/storyController');
 
 const router = express.Router();
 
@@ -162,5 +163,19 @@ router.delete('/:id', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Failed to delete draft' });
   }
 });
+
+// ==================== LIKE & COMMENT ROUTES ====================
+
+// POST - Like/Unlike a story (toggle) - PROTECTED
+router.post('/:id/like', requireAuth, likeStory);
+
+// POST - Add a comment to a story - PROTECTED
+router.post('/:id/comment', requireAuth, addComment);
+
+// GET - Get all comments for a story - PUBLIC
+router.get('/:id/comments', getComments);
+
+// GET - Get like count and status - PUBLIC (with optional auth)
+router.get('/:id/likes', getLikes);
 
 module.exports = router;

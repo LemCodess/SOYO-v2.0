@@ -288,6 +288,21 @@
   display: none;
 }
 
+/* Story Engagement Section */
+.story-engagement {
+  padding: 32px 0;
+  border-top: 2px solid #e2e8f0;
+  border-bottom: 2px solid #e2e8f0;
+  display: flex;
+  justify-content: center;
+  margin: 32px 0;
+}
+
+/* Story Comments Section */
+.story-comments-section {
+  margin-top: 40px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .story-reader-container {

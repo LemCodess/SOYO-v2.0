@@ -84,6 +84,14 @@
   align-items: center;
   padding-top: 10px;
   border-top: 1px solid #e2e8f0;
+  gap: 8px;
+}
+
+.story-card-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .story-card-language {
@@ -92,6 +100,16 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.story-card-likes,
+.story-card-comments {
+  font-size: 12px;
+  color: #4a5568;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .story-card-read-btn {
