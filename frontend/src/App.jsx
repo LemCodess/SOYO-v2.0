@@ -55,12 +55,11 @@ const App = () => {
   }
 
   return (
-    <Router>
-      <div className='app'>
-        {/* Navbar appears on all pages */}
-        <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+    <div className='app'>
+      {/* Navbar appears on all pages */}
+      <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
 
-        <Switch>
+      <Switch>
           {/* Public Routes */}
           <Route path="/" exact>
             <Home isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} name={name} />
@@ -126,9 +125,8 @@ const App = () => {
           <Route path="/stories/:id">
             {({ match }) => <Redirect to={`/story/${match.params.id}`} />}
           </Route>
-        </Switch>
-      </div>
-    </Router>
+      </Switch>
+    </div>
   );
 };
 

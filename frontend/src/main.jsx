@@ -5,10 +5,14 @@ import './index.css'
 import './styles/toast.css'
 
 import { BrowserRouter as Router } from 'react-router-dom'
+import { AuthContextProvider } from './context/AuthContext'
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Router>
-      <App />
+      <AuthContextProvider>
+        <App />
+      </AuthContextProvider>
     </Router>
   </React.StrictMode>,
 )

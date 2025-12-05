@@ -1,11 +1,14 @@
 const express = require('express');
 const requireAuth = require('../middleware/requireAuth');
 const Story = require('../models/storyModel');
+const upload = require('../middleware/uploadMemory');
+const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
 
 const router = express.Router();
 
 // POST a new story (Draft or Publish) - PROTECTED
-router.post('/', requireAuth, async (req, res) => {
+// Supports cover image upload
+router.post('/', requireAuth, upload.single('cover'), async (req, res) => {
   const { topicName, description, category, tags, language, chapters, status, _id } = req.body;
 
   if (!topicName || !description || !category || !tags || !language || !status) {
@@ -25,13 +28,41 @@ router.post('/', requireAuth, async (req, res) => {
       author: req.user._id
     };
 
+    // Handle cover image upload if provided
+    if (req.file) {
+      try {
+        const uploadResult = await uploadToCloudinary(
+          req.file.buffer,
+          'soyo-story-covers'
+        );
+        storyData.coverImage = uploadResult.secure_url;
+        storyData.coverImagePublicId = uploadResult.public_id;
+        console.log('✅ Cover image uploaded:', uploadResult.secure_url);
+      } catch (uploadError) {
+        console.error('Cover upload error:', uploadError);
+        return res.status(500).json({ error: 'Failed to upload cover image' });
+      }
+    }
+
     let story;
     if (_id) {
-      // Update an existing story (either draft or publish)
+      // Update an existing story
+      const existingStory = await Story.findById(_id);
+
+      // If new cover is uploaded and old cover exists, delete old one
+      if (req.file && existingStory?.coverImagePublicId) {
+        try {
+          await deleteFromCloudinary(existingStory.coverImagePublicId);
+          console.log('✅ Old cover image deleted from Cloudinary');
+        } catch (err) {
+          console.log('⚠️ Could not delete old cover:', err.message);
+        }
+      }
+
       story = await Story.findByIdAndUpdate(_id, storyData, { new: true, runValidators: true });
       return res.status(200).json({ message: 'Story updated successfully', story });
     } else {
-      // Create a new story (either draft or publish)
+      // Create a new story
       story = await Story.create(storyData);
       return res.status(201).json({ message: 'Story created successfully', story });
     }
@@ -56,7 +87,7 @@ router.get('/published', async (req, res) => {
         $or: [
           { topicName: searchRegex },      // Search by story topic name
           { category: searchRegex },       // Search by category (genre)
-          { tags: searchRegex }           // Search by author name
+          { tags: searchRegex }           // Search by tags
         ]
       };
     }
@@ -108,10 +139,23 @@ router.delete('/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deletedStory = await Story.findByIdAndDelete(id);
-    if (!deletedStory) {
+    const story = await Story.findById(id);
+
+    if (!story) {
       return res.status(404).json({ error: 'Story not found' });
     }
+
+    // Delete cover image from Cloudinary if exists
+    if (story.coverImagePublicId) {
+      try {
+        await deleteFromCloudinary(story.coverImagePublicId);
+        console.log('✅ Cover image deleted from Cloudinary');
+      } catch (err) {
+        console.log('⚠️ Could not delete cover image:', err.message);
+      }
+    }
+
+    await Story.findByIdAndDelete(id);
     res.status(200).json({ message: 'Draft deleted successfully' });
   } catch (error) {
     console.error('Error deleting story:', error);

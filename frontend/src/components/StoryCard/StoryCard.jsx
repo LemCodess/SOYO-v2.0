@@ -45,7 +45,11 @@ const StoryCard = ({ story }) => {
     <div className="story-card" onClick={handleCardClick}>
       <div
         className="story-card-cover"
-        style={{ background: getCoverGradient(story.category) }}
+        style={
+          story.coverImage
+            ? { backgroundImage: `url(${story.coverImage})` }
+            : { background: getCoverGradient(story.category) }
+        }
       >
         <div className="story-card-category-overlay">
           <CategoryBadge category={story.category} />

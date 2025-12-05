@@ -304,6 +304,76 @@ textarea {
   margin: 0 12px;
 }
 
+/* Cover Image Upload Styles */
+.cover-upload-area {
+  border: 2px dashed #cbd5e0;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  background: #f7fafc;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.cover-upload-area:hover {
+  border-color: #667eea;
+  background: #edf2f7;
+}
+
+.cover-upload-label {
+  cursor: pointer;
+  display: block;
+}
+
+.upload-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.cover-upload-label p {
+  margin: 8px 0;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.upload-hint {
+  font-size: 13px;
+  color: #718096;
+  font-weight: 400;
+}
+
+.cover-preview-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.cover-preview {
+  max-width: 100%;
+  max-height: 400px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.remove-cover-btn {
+  padding: 10px 20px;
+  background: #e53e3e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.remove-cover-btn:hover {
+  background: #c53030;
+  transform: translateY(-2px);
+}
+
 /* Required indicator */
 .form-group label .required {
   color: #e53e3e;

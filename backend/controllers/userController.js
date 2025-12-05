@@ -62,14 +62,10 @@ const getUserProfile = async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        console.log('User found:', { id: user._id, name: user.name, image: user.image });
+        console.log('User found:', { id: user._id, name: user.name, profileImage: user.profileImage });
 
-        // Build profile picture URL - Use Cloudinary URL if available, otherwise fall back to local
-        const profilePictureUrl = user.cloudinaryUrl
-            ? user.cloudinaryUrl
-            : user.image
-            ? `/public/Images/${user.image}`
-            : null;
+        // Return Cloudinary URL directly (Cloudinary-only now)
+        const profilePictureUrl = user.profileImage || null;
 
         console.log('Profile picture URL:', profilePictureUrl);
 
@@ -79,8 +75,6 @@ const getUserProfile = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 profilePicture: profilePictureUrl,
-                image: user.image,
-                cloudinaryUrl: user.cloudinaryUrl,
                 createdAt: user.createdAt
             }
         });

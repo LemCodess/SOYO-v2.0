@@ -30,18 +30,26 @@ const storySchema = new Schema({
   status: {
     type: String,
     enum: ['draft', 'published'],
-    default: 'draft' 
+    default: 'draft'
   },
   chapters: {  // Changed from chapter to chapters
     type: String,
     default: ''
   },
+  coverImage: {
+    type: String,
+    default: null
+  },
+  coverImagePublicId: {
+    type: String,
+    default: null
+  },
   createdAt: {
     type: Date,
     default: Date.now
   },
-  updatedAt: { 
-    type: Date, 
+  updatedAt: {
+    type: Date,
     default: Date.now
   }
 });

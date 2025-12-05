@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.bubble.css';
+import DOMPurify from 'dompurify';
 import './Story.css';
 
 const Story = () => {
@@ -113,6 +112,13 @@ const Story = () => {
             </div>
           )}
 
+          {/* Cover Image */}
+          {story.coverImage && (
+            <div className="story-cover-banner">
+              <img src={story.coverImage} alt={story.topicName} />
+            </div>
+          )}
+
           {/* Story Header with Meta Info */}
           <div className="story-header">
             {story.category && (
@@ -150,25 +156,23 @@ const Story = () => {
           {/* Title Section */}
           <div className="story-title-section">
             <h3 className="story-section-label">Title</h3>
-            <div className="story-title-display">
-              <ReactQuill
-                value={story.topicName}
-                readOnly={true}
-                theme="bubble"
-              />
-            </div>
+            <div
+              className="story-title-display"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(story.topicName)
+              }}
+            />
           </div>
 
           {/* Description Section */}
           <div className="story-description-section">
             <h3 className="story-section-label">Description</h3>
-            <div className="story-description-display">
-              <ReactQuill
-                value={story.description}
-                readOnly={true}
-                theme="bubble"
-              />
-            </div>
+            <div
+              className="story-description-display"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(story.description)
+              }}
+            />
           </div>
 
           {/* Chapter Content */}

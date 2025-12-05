@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './Profile.css';
 import { useHistory } from 'react-router-dom';
 import { assets } from '../../assets/assets';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
+import { AuthContext } from '../../context/AuthContext';
 
 const Profile = ({ setIsLoggedIn }) => {
+  const { user, updateUser } = useContext(AuthContext);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [name, setName] = useState('');
@@ -17,6 +19,7 @@ const Profile = ({ setIsLoggedIn }) => {
   const [uploading, setUploading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [draftToDelete, setDraftToDelete] = useState(null);
+  const [storyToDeleteType, setStoryToDeleteType] = useState(null); // 'draft' or 'published'
   const [showProfilePictureDeleteModal, setShowProfilePictureDeleteModal] = useState(false);
 
   const history = useHistory();
@@ -38,7 +41,6 @@ const Profile = ({ setIsLoggedIn }) => {
         setImageFileUrl(userData.profilePicture || assets.defaultpfp);
 
         console.log('Profile picture URL:', userData.profilePicture);
-        console.log('Image field:', userData.image);
 
         // Format member since date
         if (userData.createdAt) {
@@ -89,19 +91,11 @@ const Profile = ({ setIsLoggedIn }) => {
         });
 
         console.log('All published stories:', response.data.length);
-        console.log('Sample story:', response.data[0]);
 
         // Filter stories by current user
-        // story.userId is populated as an object: { _id: '...', name: '...' }
         const userStories = response.data.filter(story => {
-          // Compare the _id from the populated userId object
           const storyUserId = story.userId?._id || story.userId;
           const match = storyUserId?.toString() === userId;
-
-          if (match) {
-            console.log('Found user story:', story.topicName);
-          }
-
           return match;
         });
 
@@ -155,20 +149,13 @@ const Profile = ({ setIsLoggedIn }) => {
         // Update localStorage
         localStorage.setItem('profileImageUrl', uploadedImageUrl);
 
+        // Update AuthContext so navbar and other components get the new image
+        updateUser({
+          profilePicture: uploadedImageUrl
+        });
+
         console.log('Profile picture uploaded and saved successfully!');
         console.log('Image URL:', uploadedImageUrl);
-
-        // Verify the upload by refetching profile data
-        setTimeout(async () => {
-          try {
-            const verifyResponse = await axios.get('/api/user/profile', {
-              headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-            });
-            console.log('Profile verification after upload:', verifyResponse.data);
-          } catch (err) {
-            console.error('Error verifying profile:', err);
-          }
-        }, 500);
       } else {
         throw new Error('Invalid response from server');
       }
@@ -201,6 +188,11 @@ const Profile = ({ setIsLoggedIn }) => {
         const defaultPicture = assets.defaultpfp;
         setImageFileUrl(defaultPicture);
         localStorage.setItem('profileImageUrl', defaultPicture);
+
+        // Update AuthContext
+        updateUser({
+          profilePicture: null
+        });
       } else {
         console.error('Failed to delete profile picture');
       }
@@ -211,8 +203,9 @@ const Profile = ({ setIsLoggedIn }) => {
     setShowProfilePictureDeleteModal(false);
   };
 
-  const handleDeleteDraftClick = (id) => {
+  const handleDeleteDraftClick = (id, type = 'draft') => {
     setDraftToDelete(id);
+    setStoryToDeleteType(type);
     setShowDeleteModal(true);
   };
 
@@ -221,10 +214,20 @@ const Profile = ({ setIsLoggedIn }) => {
       await axios.delete(`/api/stories/${draftToDelete}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
-      setDrafts(drafts.filter(draft => draft._id !== draftToDelete));
+
+      // Update the appropriate state based on story type
+      if (storyToDeleteType === 'draft') {
+        setDrafts(drafts.filter(draft => draft._id !== draftToDelete));
+      } else if (storyToDeleteType === 'published') {
+        setPublishedStories(publishedStories.filter(story => story._id !== draftToDelete));
+      }
+
       setShowDeleteModal(false);
+      setDraftToDelete(null);
+      setStoryToDeleteType(null);
     } catch (error) {
-      console.error('Error deleting draft:', error);
+      console.error('Error deleting story:', error);
+      alert('Failed to delete story. Please try again.');
     }
   };
 
@@ -294,6 +297,12 @@ const Profile = ({ setIsLoggedIn }) => {
       </div>
 
       <div className="profile-content">
+        <div className="profile-actions">
+          <button className="write-new-story-btn" onClick={() => history.push('/write')}>
+            ✍️ Write New Story
+          </button>
+        </div>
+
         <div className="profile-stats">
           <div className="stat-card">
             <div className="stat-number">{publishedStories.length}</div>
@@ -332,12 +341,35 @@ const Profile = ({ setIsLoggedIn }) => {
             ) : (
               <div className="stories-grid">
                 {publishedStories.map((story) => (
-                  <div
-                    key={story._id}
-                    className="story-card-profile"
-                    onClick={() => handleViewStory(story._id)}
-                  >
-                    <div className="story-card-content">
+                  <div key={story._id} className="story-card-profile">
+                    <div className="story-card-actions">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditDraft(story);
+                        }}
+                        className="edit-story-btn-small"
+                        title="Edit story"
+                      >
+                        ✏️
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteDraftClick(story._id, 'published');
+                        }}
+                        className="delete-story-btn-small"
+                        title="Delete story"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                    {story.coverImage && (
+                      <div className="story-cover-image" onClick={() => handleViewStory(story._id)}>
+                        <img src={story.coverImage} alt={story.topicName} />
+                      </div>
+                    )}
+                    <div className="story-card-content" onClick={() => handleViewStory(story._id)}>
                       <ReactQuill
                         value={story.topicName}
                         readOnly={true}
@@ -382,6 +414,11 @@ const Profile = ({ setIsLoggedIn }) => {
                     >
                       ×
                     </button>
+                    {draft.coverImage && (
+                      <div className="story-cover-image">
+                        <img src={draft.coverImage} alt={draft.topicName} />
+                      </div>
+                    )}
                     <div className="story-card-content">
                       <ReactQuill
                         value={draft.topicName}
@@ -417,8 +454,8 @@ const Profile = ({ setIsLoggedIn }) => {
       {showDeleteModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <h3>Delete Draft?</h3>
-            <p>Are you sure you want to delete this draft? This action cannot be undone.</p>
+            <h3>Delete {storyToDeleteType === 'published' ? 'Story' : 'Draft'}?</h3>
+            <p>Are you sure you want to delete this {storyToDeleteType === 'published' ? 'story' : 'draft'}? This action cannot be undone.</p>
             <div className="modal-buttons">
               <button className="modal-btn modal-btn-confirm" onClick={confirmDeleteDraft}>
                 Delete
