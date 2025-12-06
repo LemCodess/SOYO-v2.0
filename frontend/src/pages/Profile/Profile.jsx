@@ -5,6 +5,7 @@ import { assets } from '../../assets/assets';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import { AuthContext } from '../../context/AuthContext';
+import Button from '../../components/UI/Button';
 
 const Profile = ({ setIsLoggedIn }) => {
   const { user, updateUser } = useContext(AuthContext);
@@ -298,9 +299,19 @@ const Profile = ({ setIsLoggedIn }) => {
 
       <div className="profile-content">
         <div className="profile-actions">
-          <button className="write-new-story-btn" onClick={() => history.push('/write')}>
-            ✍️ Write New Story
-          </button>
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => history.push('/write')}
+            leftIcon={
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            }
+          >
+            Write New Story
+          </Button>
         </div>
 
         <div className="profile-stats">
@@ -334,9 +345,12 @@ const Profile = ({ setIsLoggedIn }) => {
               <div className="section-empty">
                 <div className="empty-icon">📚</div>
                 <p>No published stories yet</p>
-                <button className="write-story-btn" onClick={() => history.push('/write')}>
+                <Button
+                  variant="primary"
+                  onClick={() => history.push('/write')}
+                >
                   Write Your First Story
-                </button>
+                </Button>
               </div>
             ) : (
               <div className="stories-grid">
@@ -457,12 +471,18 @@ const Profile = ({ setIsLoggedIn }) => {
             <h3>Delete {storyToDeleteType === 'published' ? 'Story' : 'Draft'}?</h3>
             <p>Are you sure you want to delete this {storyToDeleteType === 'published' ? 'story' : 'draft'}? This action cannot be undone.</p>
             <div className="modal-buttons">
-              <button className="modal-btn modal-btn-confirm" onClick={confirmDeleteDraft}>
+              <Button
+                variant="danger"
+                onClick={confirmDeleteDraft}
+              >
                 Delete
-              </button>
-              <button className="modal-btn modal-btn-cancel" onClick={cancelDeleteDraft}>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={cancelDeleteDraft}
+              >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -475,12 +495,18 @@ const Profile = ({ setIsLoggedIn }) => {
             <h3>Remove Profile Picture?</h3>
             <p>Your profile picture will be reset to the default image.</p>
             <div className="modal-buttons">
-              <button className="modal-btn modal-btn-confirm" onClick={confirmResetProfilePicture}>
+              <Button
+                variant="danger"
+                onClick={confirmResetProfilePicture}
+              >
                 Remove
-              </button>
-              <button className="modal-btn modal-btn-cancel" onClick={() => setShowProfilePictureDeleteModal(false)}>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setShowProfilePictureDeleteModal(false)}
+              >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         </div>

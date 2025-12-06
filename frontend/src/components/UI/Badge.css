@@ -1,0 +1,80 @@
+/* ========================================
+   BADGE COMPONENT
+   ======================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  transition: all var(--transition-base);
+}
+
+/* ========== Sizes ========== */
+.badge-sm {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.badge-md {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.badge-lg {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-base);
+}
+
+/* ========== Variants ========== */
+
+/* Default */
+.badge-default {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Primary */
+.badge-primary {
+  background: var(--primary-100);
+  color: var(--primary-700);
+}
+
+/* Success */
+.badge-success {
+  background: var(--success-50);
+  color: var(--success-600);
+}
+
+/* Error */
+.badge-error {
+  background: var(--error-50);
+  color: var(--error-600);
+}
+
+/* Warning */
+.badge-warning {
+  background: var(--warning-50);
+  color: var(--warning-600);
+}
+
+/* Info */
+.badge-info {
+  background: var(--info-50);
+  color: var(--info-600);
+}
+
+/* Outline */
+.badge-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+}
+
+/* Solid Primary */
+.badge-solid {
+  background: var(--primary-500);
+  color: var(--text-white);
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { addComment, fetchComments } from '../../services/storyService';
 import './CommentBox.css';
+import { Input, Button } from '../UI';
 
 const CommentBox = ({ storyId, isAuthenticated }) => {
   const [comments, setComments] = useState([]);
@@ -96,32 +97,45 @@ const CommentBox = ({ storyId, isAuthenticated }) => {
     <div className="comment-box-container">
       <div className="comment-box-header">
         <h3 className="comment-box-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
           Comments <span className="comment-count">({comments.length})</span>
         </h3>
       </div>
 
       {/* Comment Input */}
       <form className="comment-input-form" onSubmit={handleSubmit}>
-        <textarea
-          className="comment-input"
+        <Input
+          type="textarea"
           placeholder={isAuthenticated ? 'Share your thoughts...' : 'Login to comment'}
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
           maxLength={500}
           rows={3}
           disabled={!isAuthenticated || submitting}
+          helperText={`${commentText.length}/500 characters`}
+          leftIcon={
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          }
         />
         <div className="comment-input-footer">
-          <span className="character-count">
-            {commentText.length}/500
-          </span>
-          <button
+          <Button
             type="submit"
-            className="comment-submit-btn"
+            variant="primary"
             disabled={!isAuthenticated || submitting || !commentText.trim()}
+            loading={submitting}
+            rightIcon={
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            }
           >
-            {submitting ? 'Posting...' : 'Post Comment'}
-          </button>
+            Post Comment
+          </Button>
         </div>
       </form>
 
@@ -134,7 +148,9 @@ const CommentBox = ({ storyId, isAuthenticated }) => {
           </div>
         ) : comments.length === 0 ? (
           <div className="comments-empty">
-            <div className="empty-icon">💬</div>
+            <svg className="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
             <p>No comments yet. Be the first to comment!</p>
           </div>
         ) : (

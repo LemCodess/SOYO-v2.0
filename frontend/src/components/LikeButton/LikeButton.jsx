@@ -59,8 +59,19 @@ const LikeButton = ({ storyId, isAuthenticated }) => {
       onClick={handleLike}
       disabled={loading}
       title={isLiked ? 'Unlike' : 'Like'}
+      aria-label={`${isLiked ? 'Unlike' : 'Like'} story (${likes} likes)`}
     >
-      <span className="like-icon">{isLiked ? '❤️' : '🤍'}</span>
+      <svg
+        className="like-icon"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill={isLiked ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
       <span className="like-count">{likes}</span>
     </button>
   );

@@ -1,42 +1,51 @@
+/* ========================================
+   LIKE BUTTON
+   ======================================== */
+
 .like-button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 24px;
-  font-size: 16px;
-  font-weight: 600;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  background: var(--bg-primary);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-full);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: 'Outfit', sans-serif;
+  transition: all var(--transition-base);
+  color: var(--text-secondary);
 }
 
 .like-button:hover {
-  border-color: #fc8181;
-  background: #fff5f5;
-  transform: scale(1.05);
+  border-color: var(--error-300);
+  background: var(--error-50);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .like-button.liked {
-  border-color: #fc8181;
-  background: #fff5f5;
+  border-color: var(--error-500);
+  background: linear-gradient(135deg, var(--error-50) 0%, var(--error-100) 100%);
+  color: var(--error-600);
 }
 
 .like-button.loading {
   opacity: 0.6;
   cursor: not-allowed;
+  pointer-events: none;
 }
 
 .like-button:disabled {
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .like-icon {
-  font-size: 20px;
   line-height: 1;
-  transition: transform 0.2s ease;
+  transition: transform var(--transition-base);
+  color: var(--error-500);
+  flex-shrink: 0;
 }
 
 .like-button:active .like-icon {
@@ -44,10 +53,12 @@
 }
 
 .like-count {
-  color: #2d3748;
-  font-size: 15px;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  transition: color var(--transition-base);
 }
 
 .like-button.liked .like-count {
-  color: #e53e3e;
+  color: var(--error-600);
 }

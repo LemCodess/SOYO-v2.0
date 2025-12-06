@@ -1,0 +1,90 @@
+/* ========================================
+   CARD COMPONENT
+   ======================================== */
+
+.card {
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+}
+
+/* ========== Variants ========== */
+
+/* Default Card */
+.card-default {
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Elevated Card */
+.card-elevated {
+  box-shadow: var(--shadow-md);
+  border: none;
+}
+
+/* Outlined Card */
+.card-outlined {
+  border: 2px solid var(--border-light);
+  box-shadow: none;
+}
+
+/* Ghost Card */
+.card-ghost {
+  background: var(--bg-secondary);
+  border: none;
+  box-shadow: none;
+}
+
+/* Primary Card */
+.card-primary {
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+  color: var(--text-white);
+  border: none;
+  box-shadow: var(--shadow-primary);
+}
+
+/* ========== Padding ========== */
+.card-padding-none {
+  padding: 0;
+}
+
+.card-padding-sm {
+  padding: var(--space-4);
+}
+
+.card-padding-md {
+  padding: var(--space-6);
+}
+
+.card-padding-lg {
+  padding: var(--space-8);
+}
+
+/* ========== Interactive States ========== */
+
+/* Hoverable */
+.card-hoverable:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Clickable */
+.card-clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.card-clickable:active {
+  transform: translateY(0);
+}
+
+/* Combined Hoverable + Clickable */
+.card-hoverable.card-clickable:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-4px);
+}
+
+.card-hoverable.card-clickable:active {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}

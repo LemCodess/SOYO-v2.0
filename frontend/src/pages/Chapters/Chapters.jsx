@@ -4,6 +4,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './Chapters.css';
 import axios from 'axios';
+import { Input, Button } from '../../components/UI';
 
 const Chapters = () => {
   const location = useLocation();
@@ -18,9 +19,9 @@ const Chapters = () => {
   const [error, setError] = useState(null);
   const [uploadingCover, setUploadingCover] = useState(false);
 
-  // Toolbar options for title and description
-  const titleModules = { toolbar: [['bold', 'italic', 'underline', 'clean']] };
-  const descriptionModules = { toolbar: [['bold', 'italic', 'underline', 'clean']] };
+  // Disable toolbar for title and description - plain text only
+  const titleModules = { toolbar: false };
+  const descriptionModules = { toolbar: false };
 
   const handleCoverImageChange = (e) => {
     const file = e.target.files[0];
@@ -117,28 +118,44 @@ const Chapters = () => {
           <div className="form-section">
             <h2 className="section-title">
               <span className="section-number">1</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
               Cover Image (Optional)
             </h2>
 
             <div className="form-group">
-              <label htmlFor="coverImage">
+              <label htmlFor="coverImage" className="custom-label">
                 Story Cover
               </label>
               {coverPreview ? (
                 <div className="cover-preview-container">
                   <img src={coverPreview} alt="Cover preview" className="cover-preview" />
-                  <button
+                  <Button
                     type="button"
-                    className="remove-cover-btn"
+                    variant="danger"
+                    size="sm"
                     onClick={handleRemoveCover}
+                    leftIcon={
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      </svg>
+                    }
                   >
                     Remove Cover
-                  </button>
+                  </Button>
                 </div>
               ) : (
                 <div className="cover-upload-area">
                   <label htmlFor="cover-input" className="cover-upload-label">
-                    <div className="upload-icon">📸</div>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="upload-icon-svg">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
                     <p>Click to upload cover image</p>
                     <p className="upload-hint">Recommended: 1000x1000px, max 5MB</p>
                   </label>
@@ -158,12 +175,21 @@ const Chapters = () => {
           <div className="form-section">
             <h2 className="section-title">
               <span className="section-number">2</span>
-              Style Your Story
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="12" y1="18" x2="12" y2="12"></line>
+                <line x1="9" y1="15" x2="15" y2="15"></line>
+              </svg>
+              Story Details
             </h2>
 
             <div className="form-group">
-              <label htmlFor="styledTitle">
-                Styled Title <span className="required">*</span>
+              <label htmlFor="styledTitle" className="custom-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 7h16M10 3v18M14 3v18"></path>
+                </svg>
+                Title <span className="required">*</span>
               </label>
               <div className="quill-editor-wrapper">
                 <ReactQuill
@@ -172,15 +198,21 @@ const Chapters = () => {
                   value={styledTitle}
                   onChange={setStyledTitle}
                   modules={titleModules}
-                  placeholder="Add formatting to your title..."
+                  placeholder="Enter your story title..."
                 />
               </div>
-              <p className="form-hint">Use bold, italic, or underline to make your title stand out</p>
+              <p className="form-hint">Keep it simple and captivating</p>
             </div>
 
             <div className="form-group">
-              <label htmlFor="styledDescription">
-                Styled Description <span className="required">*</span>
+              <label htmlFor="styledDescription" className="custom-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="17" y1="10" x2="3" y2="10"></line>
+                  <line x1="21" y1="6" x2="3" y2="6"></line>
+                  <line x1="21" y1="14" x2="3" y2="14"></line>
+                  <line x1="17" y1="18" x2="3" y2="18"></line>
+                </svg>
+                Description <span className="required">*</span>
               </label>
               <div className="quill-editor-wrapper">
                 <ReactQuill
@@ -189,10 +221,10 @@ const Chapters = () => {
                   value={styledDescription}
                   onChange={setStyledDescription}
                   modules={descriptionModules}
-                  placeholder="Add formatting to your description..."
+                  placeholder="Describe your story in a few sentences..."
                 />
               </div>
-              <p className="form-hint">Format your description to make it more engaging</p>
+              <p className="form-hint">Write a brief summary to attract readers</p>
             </div>
           </div>
 
@@ -200,45 +232,89 @@ const Chapters = () => {
           <div className="form-section">
             <h2 className="section-title">
               <span className="section-number">3</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                <path d="M2 2l7.586 7.586"></path>
+                <circle cx="11" cy="11" r="2"></circle>
+              </svg>
               Chapter Content
             </h2>
 
             <div className="form-group">
-              <label htmlFor="chapters">
-                Your Story <span className="required">*</span>
-              </label>
-              <textarea
+              <Input
+                label="Your Story"
                 id="chapters"
+                type="textarea"
                 value={chapters}
                 onChange={(e) => setChapters(e.target.value)}
                 placeholder="Start writing your story here..."
                 required
+                helperText="Write your chapter content. Let your creativity flow!"
+                leftIcon={
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                  </svg>
+                }
               />
-              <p className="form-hint">Write your chapter content. Let your creativity flow!</p>
             </div>
           </div>
 
           {/* Action Buttons */}
           <div className="button-group">
-            <button
+            <Button
               type="button"
-              className="draft-btn"
+              variant="success"
+              size="lg"
+              fullWidth
               onClick={() => handleSaveOrPublish('draft')}
               disabled={uploadingCover}
+              loading={uploadingCover}
+              leftIcon={
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+              }
             >
-              {uploadingCover ? 'Uploading...' : 'Save as Draft'}
-            </button>
-            <button
+              Save as Draft
+            </Button>
+            <Button
               type="button"
-              className="submit-btn"
+              variant="primary"
+              size="lg"
+              fullWidth
               onClick={() => handleSaveOrPublish('published')}
               disabled={uploadingCover}
+              loading={uploadingCover}
+              rightIcon={
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14"></path>
+                  <path d="M12 5l7 7-7 7"></path>
+                </svg>
+              }
             >
-              {uploadingCover ? 'Uploading...' : 'Publish Story'}
-            </button>
-            <button type="button" className="cancel-btn" onClick={() => history.push('/write')}>
+              Publish Story
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="lg"
+              fullWidth
+              onClick={() => history.push('/write')}
+              leftIcon={
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 12H5"></path>
+                  <path d="M12 19l-7-7 7-7"></path>
+                </svg>
+              }
+            >
               Back
-            </button>
+            </Button>
           </div>
         </form>
       </div>

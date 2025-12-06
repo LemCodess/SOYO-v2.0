@@ -17,11 +17,19 @@ const StoryCard = ({ story }) => {
 
   const getDescription = () => {
     const desc = stripHtml(story.description || '');
-    return desc.length > 120 ? desc.substring(0, 120) + '...' : desc;
+    return desc.length > 150 ? desc.substring(0, 150) + '...' : desc;
   };
 
   const getTitle = () => {
     return stripHtml(story.topicName || 'Untitled Story');
+  };
+
+  // Calculate reading time (average 200 words per minute)
+  const getReadingTime = () => {
+    const content = stripHtml(story.chapterContent || '');
+    const words = content.trim().split(/\s+/).length;
+    const minutes = Math.ceil(words / 200);
+    return minutes < 1 ? '< 1 min' : `${minutes} min read`;
   };
 
   // Generate category-based placeholder cover
@@ -59,26 +67,32 @@ const StoryCard = ({ story }) => {
       <div className="story-card-content">
         <h3 className="story-card-title">{getTitle()}</h3>
         <p className="story-card-author">
-          <span className="author-label">by</span> {story.userId?.name || 'Anonymous'}
+          by <span className="author-name">{story.userId?.name || 'Anonymous'}</span>
         </p>
         <p className="story-card-description">{getDescription()}</p>
 
         <div className="story-card-footer">
           <div className="story-card-stats">
-            <span className="story-card-language">{story.language || 'English'}</span>
-            <span className="story-card-likes">
-              ❤️ {story.likes?.length || 0}
+            <span className="story-card-stat">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+              {story.likes?.length || 0}
             </span>
-            <span className="story-card-comments">
-              💬 {story.comments?.length || 0}
+            <span className="story-card-stat">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              {story.comments?.length || 0}
+            </span>
+            <span className="story-card-stat story-card-time">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              {getReadingTime()}
             </span>
           </div>
-          <button className="story-card-read-btn" onClick={(e) => {
-            e.stopPropagation();
-            handleCardClick();
-          }}>
-            Read Story →
-          </button>
         </div>
       </div>
     </div>

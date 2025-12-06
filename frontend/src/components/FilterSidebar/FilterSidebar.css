@@ -1,139 +1,218 @@
+/* ========================================
+   FILTER SIDEBAR
+   ======================================== */
+
 .filter-sidebar {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
   position: sticky;
-  top: 20px;
-  max-height: calc(100vh - 40px);
+  top: 100px;
+  max-height: calc(100vh - 120px);
   overflow-y: auto;
 }
 
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: 2px solid var(--border-light);
+}
+
+.filter-sidebar-title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.filter-header svg {
+  color: var(--primary-500);
+}
+
 .filter-section {
-  margin-bottom: 28px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: var(--space-7);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .filter-section:last-of-type {
   border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: var(--space-6);
 }
 
 .filter-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 16px;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.filter-title svg {
+  color: var(--text-tertiary);
 }
 
 .filter-search-input {
   width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: 'Outfit', sans-serif;
-  transition: all 0.2s ease;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  transition: all var(--transition-base);
+}
+
+.filter-search-input::placeholder {
+  color: var(--text-tertiary);
 }
 
 .filter-search-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--primary-500);
+  background: var(--bg-primary);
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .filter-options {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
+}
+
+.filter-options-inline {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
 .filter-option {
-  padding: 10px 16px;
-  border: 1px solid #e2e8f0;
-  background: white;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #4a5568;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--border-light);
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-base);
   text-align: left;
-  font-family: 'Outfit', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-option-chip {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .filter-option:hover {
-  background: #f7fafc;
-  border-color: #cbd5e0;
+  background: var(--bg-secondary);
+  border-color: var(--border-medium);
+  transform: translateX(2px);
 }
 
 .filter-option.active {
-  background: #667eea;
-  color: white;
-  border-color: #667eea;
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+  color: var(--text-white);
+  border-color: var(--primary-600);
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-option.active svg {
+  color: var(--text-white);
 }
 
 .filter-select {
   width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: 'Outfit', sans-serif;
-  background: white;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  background: var(--bg-primary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-base);
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--primary-500);
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.filter-clear-btn {
-  width: 100%;
-  padding: 12px;
-  background: #f7fafc;
-  color: #4a5568;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Outfit', sans-serif;
+.filter-select:hover {
+  border-color: var(--border-medium);
 }
 
-.filter-clear-btn:hover {
-  background: #edf2f7;
-  border-color: #cbd5e0;
-}
+/* ========================================
+   CUSTOM SCROLLBAR
+   ======================================== */
 
-/* Custom scrollbar */
 .filter-sidebar::-webkit-scrollbar {
   width: 6px;
 }
 
 .filter-sidebar::-webkit-scrollbar-track {
-  background: #f7fafc;
-  border-radius: 10px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
 }
 
 .filter-sidebar::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 10px;
+  background: var(--border-medium);
+  border-radius: var(--radius-full);
 }
 
 .filter-sidebar::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
+  background: var(--border-dark);
 }
 
-/* Responsive */
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
 @media (max-width: 968px) {
   .filter-sidebar {
     position: static;
     max-height: none;
-    margin-bottom: 24px;
+    margin-bottom: var(--space-6);
+    top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-sidebar {
+    padding: var(--space-4);
+  }
+
+  .filter-header {
+    margin-bottom: var(--space-4);
+  }
+
+  .filter-sidebar-title {
+    font-size: var(--text-lg);
+  }
+
+  .filter-options-inline {
+    flex-direction: column;
+  }
+
+  .filter-option-chip {
+    width: 100%;
   }
 }

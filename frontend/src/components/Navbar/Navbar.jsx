@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import Button from '../UI/Button';
 import './Navbar.css';
 import { assets } from '../../assets/assets';
 
@@ -47,21 +48,44 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
         <div className="navbar-actions">
           {!isLoggedIn ? (
             <>
-              <button className="navbar-btn navbar-btn-login" onClick={() => history.push('/login')}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => history.push('/login')}
+              >
                 Log In
-              </button>
-              <button className="navbar-btn navbar-btn-signup" onClick={() => history.push('/signup')}>
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => history.push('/signup')}
+              >
                 Sign Up
-              </button>
+              </Button>
             </>
           ) : (
             <>
-              <button className="navbar-btn navbar-btn-profile" onClick={() => history.push('/profile')}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => history.push('/profile')}
+                leftIcon={
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                }
+              >
                 Profile
-              </button>
-              <button className="navbar-btn navbar-btn-logout" onClick={handleLogout}>
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="navbar-logout-btn"
+              >
                 Logout
-              </button>
+              </Button>
             </>
           )}
         </div>

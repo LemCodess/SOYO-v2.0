@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './Writing.css';
+import { Input, Button } from '../../components/UI';
 
 const Writing = () => {
   const [topicName, setTopicName] = useState('');
@@ -58,32 +59,44 @@ const Writing = () => {
             </h2>
 
             <div className="form-group">
-              <label htmlFor="topicName">
-                Story Title <span className="required">*</span>
-              </label>
-              <input
-                type="text"
+              <Input
+                label="Story Title"
                 id="topicName"
+                type="text"
                 value={topicName}
                 onChange={(e) => setTopicName(e.target.value)}
                 placeholder="Enter your story title..."
                 required
+                helperText="Choose a captivating title for your story"
+                leftIcon={
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                }
               />
-              <p className="form-hint">Choose a captivating title for your story</p>
             </div>
 
             <div className="form-group">
-              <label htmlFor="description">
-                Description <span className="required">*</span>
-              </label>
-              <textarea
+              <Input
+                label="Description"
                 id="description"
+                type="textarea"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Describe what your story is about..."
                 required
+                helperText="Write a brief summary to attract readers"
+                leftIcon={
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                }
               />
-              <p className="form-hint">Write a brief summary to attract readers</p>
             </div>
           </div>
 
@@ -95,11 +108,15 @@ const Writing = () => {
             </h2>
 
             <div className="form-group">
-              <label htmlFor="category">
+              <label htmlFor="category" className="custom-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
                 Category <span className="required">*</span>
               </label>
               <select
                 id="category"
+                className="custom-select"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 required
@@ -119,26 +136,36 @@ const Writing = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="tags">
-                Tags <span className="required">*</span>
-              </label>
-              <input
-                type="text"
+              <Input
+                label="Tags"
                 id="tags"
+                type="text"
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
                 placeholder="adventure, magic, friendship..."
                 required
+                helperText="Add relevant tags to help readers find your story"
+                leftIcon={
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                    <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                  </svg>
+                }
               />
-              <p className="form-hint">Add relevant tags to help readers find your story</p>
             </div>
 
             <div className="form-group">
-              <label htmlFor="language">
+              <label htmlFor="language" className="custom-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
                 Language <span className="required">*</span>
               </label>
               <select
                 id="language"
+                className="custom-select"
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
                 required
@@ -152,12 +179,28 @@ const Writing = () => {
 
           {/* Buttons */}
           <div className="button-group">
-            <button type="submit" className="submit-btn">
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              fullWidth
+              rightIcon={
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              }
+            >
               Next: Write Content
-            </button>
-            <button type="button" className="cancel-btn" onClick={() => history.push('/')}>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="lg"
+              fullWidth
+              onClick={() => history.push('/')}
+            >
               Cancel
-            </button>
+            </Button>
           </div>
         </form>
       </div>
